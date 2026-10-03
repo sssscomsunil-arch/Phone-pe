@@ -1,529 +1,832 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport"
-    content="width=device-width,initial-scale=1,maximum-scale=1,
-    user-scalable=no,viewport-fit=cover">
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 
-  <meta name="theme-color" content="#5b20e8">
-  <meta name="mobile-web-app-capable" content="yes">
+<title>Payment Demo</title>
 
-  <title>Payment Demo</title>
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f7f2ff;
+  color:#222;
+}
+
+body{
+  overflow:hidden;
+}
+
+.app{
+  width:100%;
+  height:100vh;
+  position:relative;
+  overflow:hidden;
+}
+
+.demo-banner{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:27px;
+  background:#222;
+  color:#fff;
+  z-index:9999;
+  text-align:center;
+  font-size:11px;
+  line-height:27px;
+  letter-spacing:.7px;
+}
+
+/* ---------- HOME ---------- */
+
+.screen{
+  width:100%;
+  height:100%;
+  overflow-y:auto;
+  padding-top:27px;
+  display:none;
+}
+
+.screen.active{
+  display:block;
+}
+
+.home{
+  min-height:100%;
+  padding:24px 18px 35px;
+  background:linear-gradient(180deg,#8b20df 0%,#b35bf0 42%,#d9a8fa 100%);
+}
+
+.logo-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:25px;
+}
+
+.logo-title{
+  font-size:29px;
+  font-weight:800;
+  color:#fff;
+  text-shadow:0 2px 5px rgba(0,0,0,.2);
+}
+
+.logo-box{
+  width:55px;
+  height:55px;
+  border-radius:16px;
+  background:#fff;
+  color:#6d16d8;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:27px;
+  font-weight:900;
+  box-shadow:0 5px 15px rgba(0,0,0,.18);
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:13px;
+  max-width:520px;
+  margin:auto;
+}
+
+.card{
+  background:#fff;
+  border-radius:13px;
+  padding:16px 10px 15px;
+  box-shadow:0 7px 20px rgba(65,0,100,.18);
+  text-align:center;
+}
+
+.card-title{
+  font-size:13px;
+  color:#555;
+  line-height:18px;
+  min-height:36px;
+}
+
+.price{
+  margin:5px -10px 12px;
+  padding:7px;
+  background:#6415df;
+  color:white;
+  font-size:23px;
+  font-weight:800;
+  clip-path:polygon(0 10%,92% 0,100% 90%,8% 100%);
+}
+
+.features{
+  text-align:left;
+  font-size:10px;
+  line-height:21px;
+  color:#444;
+}
+
+.ok{
+  color:#16a34a;
+  font-weight:bold;
+}
+
+.no{
+  color:#dc2626;
+  font-weight:bold;
+}
+
+.buy{
+  border:0;
+  background:#6014dc;
+  color:white;
+  border-radius:20px;
+  padding:9px 17px;
+  font-size:11px;
+  font-weight:bold;
+  margin-top:12px;
+  cursor:pointer;
+}
+
+.bottom-buttons{
+  display:flex;
+  gap:13px;
+  margin:80px auto 25px;
+  max-width:520px;
+}
+
+.bottom-buttons button{
+  flex:1;
+  border:0;
+  padding:14px 8px;
+  border-radius:25px;
+  background:#6717dc;
+  color:#fff;
+  font-weight:bold;
+  box-shadow:0 5px 15px rgba(50,0,100,.2);
+}
+
+.telegram{
+  width:52px;
+  height:52px;
+  margin:auto;
+  border-radius:50%;
+  background:#22aeea;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:24px;
+}
+
+/* ---------- PAYMENT ---------- */
+
+.payment{
+  min-height:100%;
+  background:#fff;
+}
+
+.header{
+  height:62px;
+  display:flex;
+  align-items:center;
+  padding:0 18px;
+  border-bottom:1px solid #eee;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.back{
+  border:0;
+  background:none;
+  font-size:28px;
+  margin-right:15px;
+  cursor:pointer;
+}
+
+.pay-content{
+  padding:25px 18px;
+}
+
+.receiver{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:25px;
+}
+
+.avatar{
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  background:#287df0;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  font-size:20px;
+}
+
+.receiver-name{
+  font-size:18px;
+  font-weight:bold;
+}
+
+.receiver-id{
+  color:#777;
+  font-size:13px;
+  margin-top:4px;
+}
+
+.amount-box{
+  height:68px;
+  border:1px solid #aaa;
+  border-radius:7px;
+  display:flex;
+  align-items:center;
+  padding:0 15px;
+  font-size:28px;
+  margin-bottom:14px;
+}
+
+.amount-box span{
+  margin-right:7px;
+}
+
+.amount-box input{
+  border:0;
+  outline:0;
+  width:100%;
+  font-size:27px;
+}
+
+.message{
+  width:100%;
+  height:60px;
+  border:1px solid #ddd;
+  border-radius:7px;
+  padding:15px;
+  font-size:15px;
+}
+
+.pay-button{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:65px;
+  background:#6413ed;
+  color:white;
+  border:0;
+  font-size:17px;
+  font-weight:bold;
+}
+
+/* ---------- VERIFY ---------- */
+
+.center{
+  min-height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+  text-align:center;
+}
+
+.spinner{
+  width:50px;
+  height:50px;
+  border:5px solid #eee;
+  border-top-color:#6517e7;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  margin-bottom:25px;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg);}
+}
+
+.verify-title{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.verify-sub{
+  color:#888;
+  margin-top:10px;
+  font-size:13px;
+}
+
+/* ---------- SUCCESS ---------- */
+
+.success{
+  min-height:100%;
+  background:#fff;
+  padding:30px 20px;
+}
+
+.success-icon{
+  width:75px;
+  height:75px;
+  border-radius:50%;
+  background:#20c65a;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:42px;
+  margin:30px auto 20px;
+}
+
+.success h1{
+  text-align:center;
+  font-size:23px;
+}
+
+.demo-note{
+  text-align:center;
+  color:#d97706;
+  font-size:12px;
+  font-weight:bold;
+  margin:10px 0 25px;
+}
+
+.success-amount{
+  text-align:center;
+  font-size:31px;
+  font-weight:bold;
+  margin-bottom:30px;
+}
+
+.details{
+  border-top:1px solid #eee;
+}
+
+.detail{
+  display:flex;
+  justify-content:space-between;
+  padding:15px 0;
+  border-bottom:1px solid #eee;
+  font-size:14px;
+}
+
+.detail span:first-child{
+  color:#888;
+}
+
+.done{
+  width:100%;
+  height:52px;
+  margin-top:25px;
+  border:0;
+  border-radius:28px;
+  background:#6413ed;
+  color:#fff;
+  font-size:16px;
+  font-weight:bold;
+}
+
+/* ---------- TRANSACTION ---------- */
+
+.transaction{
+  min-height:100%;
+  background:#fff;
+}
+
+.green-head{
+  background:#18bd4d;
+  color:white;
+  padding:25px 20px 30px;
+}
+
+.green-head h2{
+  margin:0 0 7px;
+}
+
+.green-head p{
+  margin:0;
+  font-size:13px;
+}
+
+.transaction-body{
+  padding:25px 20px;
+}
+
+.paid-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.paid-info{
+  flex:1;
+}
+
+.paid-name{
+  font-size:18px;
+  font-weight:bold;
+}
+
+.paid-id{
+  color:#888;
+  margin-top:4px;
+}
+
+.tx-amount{
+  font-size:21px;
+  font-weight:bold;
+}
+
+.section{
+  margin-top:28px;
+  border-top:1px solid #eee;
+  padding-top:20px;
+}
+
+.section-title{
+  font-weight:bold;
+  margin-bottom:15px;
+}
+
+.tx-line{
+  margin:14px 0;
+}
+
+.tx-label{
+  color:#888;
+  font-size:12px;
+}
+
+.tx-value{
+  margin-top:5px;
+  word-break:break-all;
+  font-size:14px;
+}
+
+.back-home{
+  width:100%;
+  border:0;
+  background:#6413ed;
+  color:#fff;
+  border-radius:25px;
+  padding:14px;
+  font-weight:bold;
+  margin-top:25px;
+}
+</style>
 </head>
 
 <body>
 
-<div id="app">
+<div class="app">
 
-  <div class="demo-badge">
-    DEMO • NOT A REAL PAYMENT
-  </div>
+<div class="demo-banner">
+  DEMO PAYMENT SIMULATOR — NOT A REAL PAYMENT
+</div>
 
-  <!-- HOME -->
-  <section class="screen active" id="home">
+<!-- HOME -->
+<section id="home" class="screen active">
+  <div class="home">
 
-    <header class="hero">
-      <div class="brand">
-        Payment Demo
-        <span>₹</span>
-      </div>
-    </header>
+    <div class="logo-row">
+      <div class="logo-title">Fake Phone</div>
+      <div class="logo-box">₹</div>
+    </div>
 
-    <main class="home-content">
+    <div class="cards">
 
-      <div class="plans">
-
-        <article class="plan">
-          <div class="plan-title">NORMAL BUY</div>
-          <div class="plan-sub">Phone pay</div>
-
-          <div class="price">₹99</div>
-
-          <ul>
-            <li>Double Bank ✓</li>
-            <li>SMS Features On ✓</li>
-            <li>Permanent History ✓</li>
-            <li>Sound Box ×</li>
-          </ul>
-
-          <button onclick="startPayment(99)">
-            BUY NOW ›
-          </button>
-        </article>
-
-
-        <article class="plan">
-          <div class="plan-title">SOUND BOX BUY</div>
-          <div class="plan-sub">Phone pay</div>
-
-          <div class="price">₹199</div>
-
-          <ul>
-            <li>Double Bank ✓</li>
-            <li>SMS Features On ✓</li>
-            <li>Permanent History ✓</li>
-            <li>Sound Box ✓</li>
-          </ul>
-
-          <button onclick="startPayment(199)">
-            BUY NOW ›
-          </button>
-        </article>
-
-      </div>
-
-
-      <div class="home-actions">
-
-        <button class="pill" onclick="showDemoInfo()">
-          VIDEO PROOF DEMO ›
-        </button>
-
-        <button class="pill" onclick="showDemoInfo()">
-          FEEDBACKS ›
-        </button>
-
-      </div>
-
-      <div class="telegram">➤</div>
-
-    </main>
-
-  </section>
-
-
-  <!-- PAY -->
-  <section class="screen light" id="pay">
-
-    <header class="topbar">
-      <button onclick="goHome()">‹</button>
-      <b>Pay</b>
-      <span>?</span>
-    </header>
-
-    <main class="pay-page">
-
-      <div class="recipient">
-
-        <div class="avatar">
-          PD
+      <div class="card">
+        <div class="card-title">
+          NORMAL BUY<br>
+          Phone pay
         </div>
+
+        <div class="price">₹99</div>
+
+        <div class="features">
+          1. Double Bank <span class="ok">●</span><br>
+          2. SMS Features On <span class="ok">●</span><br>
+          3. Permanent History <span class="ok">●</span><br>
+          4. SOUND BOX <span class="no">●</span>
+        </div>
+
+        <button class="buy" onclick="openPay(99)">
+          BUY NOW →
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          SOUND BOX BUY<br>
+          Phone pay
+        </div>
+
+        <div class="price">₹199</div>
+
+        <div class="features">
+          1. Double Bank <span class="ok">●</span><br>
+          2. SMS Features On <span class="ok">●</span><br>
+          3. Permanent History <span class="ok">●</span><br>
+          4. SOUND BOX <span class="ok">●</span>
+        </div>
+
+        <button class="buy" onclick="openPay(199)">
+          BUY NOW →
+        </button>
+      </div>
+
+    </div>
+
+    <div class="bottom-buttons">
+      <button onclick="showDemoInfo()">VIDEO PROOF DEMO →</button>
+      <button onclick="showFeedback()">FEEDBACKS →</button>
+    </div>
+
+    <div class="telegram">➤</div>
+
+  </div>
+</section>
+
+
+<!-- PAY -->
+<section id="pay" class="screen">
+  <div class="payment">
+
+    <div class="header">
+      <button class="back" onclick="goHome()">‹</button>
+      Pay
+    </div>
+
+    <div class="pay-content">
+
+      <div class="receiver">
+        <div class="avatar">PP</div>
 
         <div>
-          <b>Demo Recipient</b>
-          <small>demo@payment</small>
+          <div class="receiver-name">Premium Demo</div>
+          <div class="receiver-id">demo.payment@demo</div>
         </div>
-
       </div>
 
-
-      <label class="amount-box">
-        ₹
-        <input
-          id="amount"
-          inputmode="numeric"
-          value="199">
-      </label>
-
+      <div class="amount-box">
+        <span>₹</span>
+        <input id="amount" type="number" inputmode="decimal"
+               value="199" min="1">
+      </div>
 
       <input
         class="message"
-        placeholder="Add a message (optional)">
+        placeholder="Add a message (optional)"
+        id="message"
+      >
 
-
-      <button
-        class="bottom-btn"
-        onclick="openMethods()">
-
-        Proceed to Pay
-
-      </button>
-
-    </main>
-
-  </section>
-
-
-  <!-- PAYMENT METHODS -->
-  <section class="screen light" id="methods">
-
-    <div
-      class="scrim"
-      onclick="closeMethods()">
-    </div>
-
-    <div class="sheet">
-
-      <div class="sheet-head">
-
-        <b>Total payable</b>
-
-        <strong id="sheetAmount">
-          ₹199
-        </strong>
-
-        ×
-
-      </div>
-
-
-      <p class="muted">
-        Recommended
+      <p style="color:#999;font-size:12px;margin-top:20px;">
+        This simulator does not connect to UPI, banks,
+        cards or payment gateways.
       </p>
-
-
-      <div class="method selected">
-
-        <span>🏦</span>
-
-        <div>
-          <b>Demo Bank</b>
-          <small>••0513 • UPI</small>
-        </div>
-
-        <strong id="bankAmount">
-          ₹199
-        </strong>
-
-        ✓
-
-      </div>
-
-
-      <p class="muted">
-        Other payment method
-      </p>
-
-
-      <div class="method">
-
-        <span>🏦</span>
-
-        <div>
-          <b>Demo Bank 2</b>
-          <small>••7765 • UPI</small>
-        </div>
-
-      </div>
-
-
-      <div class="add">
-        ＋ Add bank account ›
-      </div>
-
-
-      <button
-        class="bottom-btn"
-        onclick="showPin()">
-
-        Pay
-        <span id="payAmount">
-          ₹199
-        </span>
-
-      </button>
 
     </div>
 
-  </section>
+    <button class="pay-button" onclick="startPayment()">
+      Proceed to Demo
+    </button>
+
+  </div>
+</section>
 
 
-  <!-- PIN DEMO -->
-  <section class="screen light" id="pin">
+<!-- VERIFY -->
+<section id="verify" class="screen">
+  <div class="center">
 
-    <main class="pin-page">
+    <div class="spinner"></div>
 
-      <div class="upi-head">
-        <b>UPI DEMO</b>
-        <span>×</span>
+    <div class="verify-title">
+      Verifying Demo Payment...
+    </div>
+
+    <div class="verify-sub">
+      Simulating transaction locally
+    </div>
+
+  </div>
+</section>
+
+
+<!-- SUCCESS -->
+<section id="success" class="screen">
+  <div class="success">
+
+    <div class="success-icon">✓</div>
+
+    <h1>Demo Payment Successful!</h1>
+
+    <div class="demo-note">
+      SIMULATION ONLY — NO MONEY WAS TRANSFERRED
+    </div>
+
+    <div class="success-amount" id="successAmount">
+      ₹199
+    </div>
+
+    <div class="details">
+
+      <div class="detail">
+        <span>Order ID</span>
+        <span id="orderId"></span>
       </div>
 
-
-      <div class="yellow">
-
-        <b>
-          Pay
-          <span id="pinAmount">
-            ₹199
-          </span>
-          ...
-        </b>
-
-        <br>
-
-        To Demo Recipient
-
+      <div class="detail">
+        <span>Demo Txn ID</span>
+        <span id="txnId"></span>
       </div>
 
-
-      <h3>
-        Enter your PIN
-      </h3>
-
-
-      <div
-        class="pin-dots"
-        id="dots">
-
-        — — — —
-
+      <div class="detail">
+        <span>Date</span>
+        <span id="date"></span>
       </div>
 
+    </div>
 
-      <p class="warning">
+    <button class="done" onclick="showTransaction()">
+      View Demo Details
+    </button>
 
-        ⓘ Never enter a real UPI PIN in a demo
-
-      </p>
-
-
-      <div class="keypad">
-
-        <button onclick="pin(1)">1</button>
-        <button onclick="pin(2)">2</button>
-        <button onclick="pin(3)">3</button>
-
-        <button onclick="pin(4)">4</button>
-        <button onclick="pin(5)">5</button>
-        <button onclick="pin(6)">6</button>
-
-        <button onclick="pin(7)">7</button>
-        <button onclick="pin(8)">8</button>
-        <button onclick="pin(9)">9</button>
-
-        <button onclick="clearPin()">⌫</button>
-        <button onclick="pin(0)">0</button>
-
-        <button
-          class="pay-key"
-          onclick="submitPin()">
-
-          Pay
-
-        </button>
-
-      </div>
-
-    </main>
-
-  </section>
+  </div>
+</section>
 
 
-  <!-- CONNECTING -->
-  <section
-    class="screen light"
-    id="connecting">
+<!-- TRANSACTION -->
+<section id="transaction" class="screen">
+  <div class="transaction">
 
-    <main class="center-state">
+    <div class="green-head">
+      <h2>Demo Transaction Successful</h2>
+      <p id="txDate"></p>
+    </div>
 
-      <div class="loader"></div>
+    <div class="transaction-body">
 
-      <h2>
-        Connecting Securely
-      </h2>
+      <div class="paid-row">
 
-      <p>
-        Demo simulation in progress…
-      </p>
+        <div class="avatar">PP</div>
 
-    </main>
-
-  </section>
-
-
-  <!-- SUCCESS -->
-  <section
-    class="screen light"
-    id="success">
-
-    <main class="success-page">
-
-      <div class="check">
-        ✓
-      </div>
-
-      <h2>
-        Payment Successful!
-      </h2>
-
-      <p>
-        Demo transaction completed
-      </p>
-
-      <div
-        class="success-amount"
-        id="successAmount">
-
-        ₹199
-
-      </div>
-
-
-      <div class="details">
-
-        <div>
-          <span>Order ID</span>
-          <b id="orderId"></b>
+        <div class="paid-info">
+          <div class="paid-name">Premium Demo</div>
+          <div class="paid-id">demo.payment@demo</div>
         </div>
 
-        <div>
-          <span>Txn ID</span>
-          <b id="txnId"></b>
-        </div>
-
-        <div>
-          <span>Date</span>
-          <b id="date"></b>
-        </div>
-
-      </div>
-
-
-      <button
-        class="bottom-btn"
-        onclick="showTransaction()">
-
-        View Details
-
-      </button>
-
-
-      <button
-        class="done"
-        onclick="goHome()">
-
-        Done
-
-      </button>
-
-    </main>
-
-  </section>
-
-
-  <!-- TRANSACTION DETAILS -->
-  <section
-    class="screen light"
-    id="transaction">
-
-    <header class="greenbar">
-
-      <button onclick="showScreen('success')">
-        ‹
-      </button>
-
-      <div>
-
-        <b>
-          Transaction Successful
-        </b>
-
-        <small id="txnDate"></small>
-
-      </div>
-
-    </header>
-
-
-    <main class="transaction-page">
-
-      <p>
-        Paid to
-      </p>
-
-
-      <div class="recipient">
-
-        <div class="avatar">
-          PD
-        </div>
-
-        <div>
-          <b>Demo Recipient</b>
-          <small>demo@payment</small>
-        </div>
-
-        <strong id="txnAmount">
+        <div class="tx-amount" id="txAmount">
           ₹199
-        </strong>
+        </div>
 
       </div>
 
+      <div class="section">
 
-      <div class="line"></div>
+        <div class="section-title">
+          Transaction Details
+        </div>
 
+        <div class="tx-line">
+          <div class="tx-label">Demo Transaction ID</div>
+          <div class="tx-value" id="txId"></div>
+        </div>
 
-      <p>
-        Banking Name : Demo Bank ✓
-      </p>
+        <div class="tx-line">
+          <div class="tx-label">Payment Status</div>
+          <div class="tx-value">SIMULATED SUCCESS</div>
+        </div>
 
-
-      <div class="transfer">
-
-        <b>
-          ▤ &nbsp; Transfer Details
-        </b>
-
-        <p>
-          Transaction ID<br>
-          <span id="tid"></span>
-        </p>
-
-        <p>
-          Debited from<br>
-          XXXXXX0513
-          &nbsp;&nbsp;
-          <b id="debited"></b>
-        </p>
+        <div class="tx-line">
+          <div class="tx-label">Payment Method</div>
+          <div class="tx-value">Demo Mode</div>
+        </div>
 
       </div>
 
+      <button class="back-home" onclick="goHome()">
+        Back to Demo Home
+      </button>
 
-      <div class="actions">
-
-        <button>
-          ↗
-          <small>Send Again</small>
-        </button>
-
-        <button>
-          ◷
-          <small>View History</small>
-        </button>
-
-        <button>
-          ⇄
-          <small>Split Expense</small>
-        </button>
-
-        <button>
-          ⌯
-          <small>Share Receipt</small>
-        </button>
-
-      </div>
-
-
-      <div class="support">
-        ⓘ &nbsp; Contact Demo Support ›
-      </div>
-
-
-      <div class="powered">
-        DEMO PAYMENT • NO REAL TRANSACTION
-      </div>
-
-    </main>
-
-  </section>
+    </div>
+  </div>
+</section>
 
 </div>
 
-<script src="app.js"></script>
+
+<script>
+let currentAmount = 199;
+let transactionId = "";
+
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(screen=>{
+    screen.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+}
+
+function openPay(amount){
+  currentAmount = amount;
+
+  document.getElementById("amount").value = amount;
+
+  showScreen("pay");
+}
+
+function goHome(){
+  showScreen("home");
+}
+
+function startPayment(){
+
+  const amount =
+    Number(document.getElementById("amount").value);
+
+  if(!amount || amount <= 0){
+    alert("Please enter a valid demo amount.");
+    return;
+  }
+
+  currentAmount = amount;
+
+  transactionId =
+    "DEMO" +
+    Date.now().toString().slice(-10);
+
+  showScreen("verify");
+
+  setTimeout(()=>{
+    createSuccess();
+    showScreen("success");
+  },2200);
+}
+
+function createSuccess(){
+
+  const now = new Date();
+
+  const date =
+    now.toLocaleDateString("en-IN") +
+    " " +
+    now.toLocaleTimeString("en-IN");
+
+  document.getElementById("successAmount").textContent =
+    "₹" + currentAmount.toLocaleString("en-IN");
+
+  document.getElementById("orderId").textContent =
+    transactionId;
+
+  document.getElementById("txnId").textContent =
+    transactionId;
+
+  document.getElementById("date").textContent =
+    date;
+
+  document.getElementById("txDate").textContent =
+    date;
+
+  document.getElementById("txAmount").textContent =
+    "₹" + currentAmount.toLocaleString("en-IN");
+
+  document.getElementById("txId").textContent =
+    transactionId;
+}
+
+function showTransaction(){
+  showScreen("transaction");
+}
+
+function showDemoInfo(){
+  alert(
+    "VIDEO PROOF DEMO\n\n" +
+    "This is an offline UI simulator. " +
+    "No real payment or transaction is performed."
+  );
+}
+
+function showFeedback(){
+  alert(
+    "FEEDBACK\n\n" +
+    "This button is included for UI demonstration."
+  );
+}
+</script>
 
 </body>
   </html>
