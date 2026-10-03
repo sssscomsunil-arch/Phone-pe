@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1,maximum-scale=1,
+    user-scalable=no,viewport-fit=cover">
+
+  <meta name="theme-color" content="#5b20e8">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <title>Payment Demo</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="app">
+
+  <div class="demo-badge">
+    DEMO • NOT A REAL PAYMENT
+  </div>
+
+  <!-- HOME -->
+  <section class="screen active" id="home">
+
+    <header class="hero">
+      <div class="brand">
+        Payment Demo
+        <span>₹</span>
+      </div>
+    </header>
+
+    <main class="home-content">
+
+      <div class="plans">
+
+        <article class="plan">
+          <div class="plan-title">NORMAL BUY</div>
+          <div class="plan-sub">Phone pay</div>
+
+          <div class="price">₹99</div>
+
+          <ul>
+            <li>Double Bank ✓</li>
+            <li>SMS Features On ✓</li>
+            <li>Permanent History ✓</li>
+            <li>Sound Box ×</li>
+          </ul>
+
+          <button onclick="startPayment(99)">
+            BUY NOW ›
+          </button>
+        </article>
+
+
+        <article class="plan">
+          <div class="plan-title">SOUND BOX BUY</div>
+          <div class="plan-sub">Phone pay</div>
+
+          <div class="price">₹199</div>
+
+          <ul>
+            <li>Double Bank ✓</li>
+            <li>SMS Features On ✓</li>
+            <li>Permanent History ✓</li>
+            <li>Sound Box ✓</li>
+          </ul>
+
+          <button onclick="startPayment(199)">
+            BUY NOW ›
+          </button>
+        </article>
+
+      </div>
+
+
+      <div class="home-actions">
+
+        <button class="pill" onclick="showDemoInfo()">
+          VIDEO PROOF DEMO ›
+        </button>
+
+        <button class="pill" onclick="showDemoInfo()">
+          FEEDBACKS ›
+        </button>
+
+      </div>
+
+      <div class="telegram">➤</div>
+
+    </main>
+
+  </section>
+
+
+  <!-- PAY -->
+  <section class="screen light" id="pay">
+
+    <header class="topbar">
+      <button onclick="goHome()">‹</button>
+      <b>Pay</b>
+      <span>?</span>
+    </header>
+
+    <main class="pay-page">
+
+      <div class="recipient">
+
+        <div class="avatar">
+          PD
+        </div>
+
+        <div>
+          <b>Demo Recipient</b>
+          <small>demo@payment</small>
+        </div>
+
+      </div>
+
+
+      <label class="amount-box">
+        ₹
+        <input
+          id="amount"
+          inputmode="numeric"
+          value="199">
+      </label>
+
+
+      <input
+        class="message"
+        placeholder="Add a message (optional)">
+
+
+      <button
+        class="bottom-btn"
+        onclick="openMethods()">
+
+        Proceed to Pay
+
+      </button>
+
+    </main>
+
+  </section>
+
+
+  <!-- PAYMENT METHODS -->
+  <section class="screen light" id="methods">
+
+    <div
+      class="scrim"
+      onclick="closeMethods()">
+    </div>
+
+    <div class="sheet">
+
+      <div class="sheet-head">
+
+        <b>Total payable</b>
+
+        <strong id="sheetAmount">
+          ₹199
+        </strong>
+
+        ×
+
+      </div>
+
+
+      <p class="muted">
+        Recommended
+      </p>
+
+
+      <div class="method selected">
+
+        <span>🏦</span>
+
+        <div>
+          <b>Demo Bank</b>
+          <small>••0513 • UPI</small>
+        </div>
+
+        <strong id="bankAmount">
+          ₹199
+        </strong>
+
+        ✓
+
+      </div>
+
+
+      <p class="muted">
+        Other payment method
+      </p>
+
+
+      <div class="method">
+
+        <span>🏦</span>
+
+        <div>
+          <b>Demo Bank 2</b>
+          <small>••7765 • UPI</small>
+        </div>
+
+      </div>
+
+
+      <div class="add">
+        ＋ Add bank account ›
+      </div>
+
+
+      <button
+        class="bottom-btn"
+        onclick="showPin()">
+
+        Pay
+        <span id="payAmount">
+          ₹199
+        </span>
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- PIN DEMO -->
+  <section class="screen light" id="pin">
+
+    <main class="pin-page">
+
+      <div class="upi-head">
+        <b>UPI DEMO</b>
+        <span>×</span>
+      </div>
+
+
+      <div class="yellow">
+
+        <b>
+          Pay
+          <span id="pinAmount">
+            ₹199
+          </span>
+          ...
+        </b>
+
+        <br>
+
+        To Demo Recipient
+
+      </div>
+
+
+      <h3>
+        Enter your PIN
+      </h3>
+
+
+      <div
+        class="pin-dots"
+        id="dots">
+
+        — — — —
+
+      </div>
+
+
+      <p class="warning">
+
+        ⓘ Never enter a real UPI PIN in a demo
+
+      </p>
+
+
+      <div class="keypad">
+
+        <button onclick="pin(1)">1</button>
+        <button onclick="pin(2)">2</button>
+        <button onclick="pin(3)">3</button>
+
+        <button onclick="pin(4)">4</button>
+        <button onclick="pin(5)">5</button>
+        <button onclick="pin(6)">6</button>
+
+        <button onclick="pin(7)">7</button>
+        <button onclick="pin(8)">8</button>
+        <button onclick="pin(9)">9</button>
+
+        <button onclick="clearPin()">⌫</button>
+        <button onclick="pin(0)">0</button>
+
+        <button
+          class="pay-key"
+          onclick="submitPin()">
+
+          Pay
+
+        </button>
+
+      </div>
+
+    </main>
+
+  </section>
+
+
+  <!-- CONNECTING -->
+  <section
+    class="screen light"
+    id="connecting">
+
+    <main class="center-state">
+
+      <div class="loader"></div>
+
+      <h2>
+        Connecting Securely
+      </h2>
+
+      <p>
+        Demo simulation in progress…
+      </p>
+
+    </main>
+
+  </section>
+
+
+  <!-- SUCCESS -->
+  <section
+    class="screen light"
+    id="success">
+
+    <main class="success-page">
+
+      <div class="check">
+        ✓
+      </div>
+
+      <h2>
+        Payment Successful!
+      </h2>
+
+      <p>
+        Demo transaction completed
+      </p>
+
+      <div
+        class="success-amount"
+        id="successAmount">
+
+        ₹199
+
+      </div>
+
+
+      <div class="details">
+
+        <div>
+          <span>Order ID</span>
+          <b id="orderId"></b>
+        </div>
+
+        <div>
+          <span>Txn ID</span>
+          <b id="txnId"></b>
+        </div>
+
+        <div>
+          <span>Date</span>
+          <b id="date"></b>
+        </div>
+
+      </div>
+
+
+      <button
+        class="bottom-btn"
+        onclick="showTransaction()">
+
+        View Details
+
+      </button>
+
+
+      <button
+        class="done"
+        onclick="goHome()">
+
+        Done
+
+      </button>
+
+    </main>
+
+  </section>
+
+
+  <!-- TRANSACTION DETAILS -->
+  <section
+    class="screen light"
+    id="transaction">
+
+    <header class="greenbar">
+
+      <button onclick="showScreen('success')">
+        ‹
+      </button>
+
+      <div>
+
+        <b>
+          Transaction Successful
+        </b>
+
+        <small id="txnDate"></small>
+
+      </div>
+
+    </header>
+
+
+    <main class="transaction-page">
+
+      <p>
+        Paid to
+      </p>
+
+
+      <div class="recipient">
+
+        <div class="avatar">
+          PD
+        </div>
+
+        <div>
+          <b>Demo Recipient</b>
+          <small>demo@payment</small>
+        </div>
+
+        <strong id="txnAmount">
+          ₹199
+        </strong>
+
+      </div>
+
+
+      <div class="line"></div>
+
+
+      <p>
+        Banking Name : Demo Bank ✓
+      </p>
+
+
+      <div class="transfer">
+
+        <b>
+          ▤ &nbsp; Transfer Details
+        </b>
+
+        <p>
+          Transaction ID<br>
+          <span id="tid"></span>
+        </p>
+
+        <p>
+          Debited from<br>
+          XXXXXX0513
+          &nbsp;&nbsp;
+          <b id="debited"></b>
+        </p>
+
+      </div>
+
+
+      <div class="actions">
+
+        <button>
+          ↗
+          <small>Send Again</small>
+        </button>
+
+        <button>
+          ◷
+          <small>View History</small>
+        </button>
+
+        <button>
+          ⇄
+          <small>Split Expense</small>
+        </button>
+
+        <button>
+          ⌯
+          <small>Share Receipt</small>
+        </button>
+
+      </div>
+
+
+      <div class="support">
+        ⓘ &nbsp; Contact Demo Support ›
+      </div>
+
+
+      <div class="powered">
+        DEMO PAYMENT • NO REAL TRANSACTION
+      </div>
+
+    </main>
+
+  </section>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+  </html>
